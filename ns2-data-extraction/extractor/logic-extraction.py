@@ -52,7 +52,7 @@ class NS2Processor:
         print(f"Processed {file_path} and saved to {output_file_path}")
 
 
-root_folder = '../data/root-datafiles'
-output_folder = '../data/output-datafiles'
+root_folder = '../../data/root-datafiles'
+output_folder = '../../data/output-datafiles'
 processor = NS2Processor(root_folder, output_folder)
 processor.traverse_directories()
