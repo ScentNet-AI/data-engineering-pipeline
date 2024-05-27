@@ -11,7 +11,18 @@ class NS2Processor:
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
 
-    def process_ns2_file(self, file_path):
+    def traverse_directories(self):
+        print(f"Starting directory traversal in {self.root_folder}")
+        for dirpath, dirnames, filenames in os.walk(self.root_folder):
+            print(f"Visiting {dirpath}")
+            for filename in filenames:
+                if filename.endswith('.ns2'):
+                    file_path = os.path.join(dirpath, filename)
+                    print(f"Processing file: {file_path}")
+                    self.process_ns2_file(file_path, dirpath)
+
+    def process_ns2_file(self, file_path, subdir):
+        print(f"Processing {file_path} in {subdir}")
         reader = neo.BlackrockIO(filename=file_path)
         blk = reader.read_block()
 
@@ -29,19 +40,18 @@ class NS2Processor:
         reshaped_data = np.array(data[0]).reshape((num_samples, num_channels))
 
         df = pd.DataFrame(reshaped_data)
-        output_path = os.path.join(self.output_folder, os.path.basename(file_path).replace('.ns2', '.csv'))
-        df.to_csv(output_path, index=False)
+        
+        # Generate output file path based on subdir
+        relative_path = os.path.relpath(subdir, self.root_folder)
+        output_dir = os.path.join(self.output_folder, relative_path)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+        output_file_path = os.path.join(output_dir, os.path.splitext(os.path.basename(file_path))[0] + '.csv')
+        df.to_csv(output_file_path, index=False)
 
-        print(f"Processed {file_path} and saved to {output_path}")
+        print(f"Processed {file_path} and saved to {output_file_path}")
 
-    def traverse_directories(self):
-        for dirpath, dirnames, filenames in os.walk(self.root_folder):
-            for filename in filenames:
-                if filename.endswith('.ns2'):
-                    file_path = os.path.join(dirpath, filename)
-                    self.process_ns2_file(file_path)
-    
-# Example usage:
+
 root_folder = '../data/root-datafiles'
 output_folder = '../data/output-datafiles'
 processor = NS2Processor(root_folder, output_folder)
