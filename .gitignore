@@ -1,2 +1,33 @@
 /data/
-.env
+*.pyc
+__pycache__/
+*.env
+# Visual Studio Code
+.vscode/
+
+# Model serving
+models/
+predictions/
+
+# Docker
+.dockerignore
+
+# Machine learning
+*.model
+*.h5
+*.pth
+*.pb
+*.onnx
+*.pkl
+*.joblib
+*.ckpt
+*.weights
+*.tflite
+*.pt
+*.npy
+*.npz
+*.csv
+*.tsv
+*.json
+*.yaml
+*.yml
