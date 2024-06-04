@@ -53,6 +53,6 @@ class NS2Processor:
 
 
 root_folder = '../../data/sample/'
-output_folder = '../../data/output-sample'
+output_folder = '../../data/sample_output'
 processor = NS2Processor(root_folder, output_folder)
 processor.traverse_directories()
