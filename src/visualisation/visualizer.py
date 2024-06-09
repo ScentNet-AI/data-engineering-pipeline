@@ -63,5 +63,26 @@ class DataVisualizer:
             pass
 
 
-    def plot_topomap(self):
+    def psd_plot(self, channel_map):
+        if isinstance(self.data, np.ndarray):
+            data = pd.DataFrame(self.data)
+
+        # Select only the columns that are actually mapped (ignores unmapped channels)
+        channels_to_use = [channel for channel in channel_map.values() if channel in data.columns]
+
+        # Create an MNE Info object with the channels that we have data for
+        info = mne.create_info(ch_names=channels_to_use, sfreq=1000, ch_types='eeg')
+
+        # Create the RawArray with the data from the channels we are using
+        raw = mne.io.RawArray(data[channels_to_use].T.to_numpy(), info)
+
+        # Define the montage (electrode positions)
+        montage = mne.channels.make_standard_montage('standard_1020')
+
+        # Set the montage, ignoring channels that are not present in the montage
+        raw.set_montage(montage, on_missing='ignore')
         
+        if self.display:
+            # Visualize the data
+            raw.plot_psd(fmax=50)  # Showing PSD up to 50 Hz
+            # raw.plot_projs_topomap()  # Topomap
