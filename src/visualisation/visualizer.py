@@ -54,32 +54,25 @@ class DataVisualizer:
         plt.plot(frequencies[:len(frequencies)//2], np.abs(fft_output)[:len(frequencies)//2])
 
         # Plot the frequency spectrum
-        if self.display:
-            plt.title('Frequency Spectrum of EEG')
-            plt.xlabel('Frequency (Hz)')
-            plt.ylabel('Amplitude')
+        plt.title('Frequency Spectrum of EEG')
+        plt.xlabel('Frequency (Hz)')
+        plt.ylabel('Amplitude')
+    
+        if self.display:    
             plt.show()
         
-        else:
-            pass
-        
-    
     def plot_time(self):
         # Plot the first few seconds of EEG data for the first few channels
         plt.figure(figsize=(15, 5))
         for channel in self.channels[:5]:  # Adjust the slice for more/less channels
             plt.plot(self.data[channel][:self.sampling_rate * 2], label=channel)  # Plotting first 2 seconds
+        plt.title('EEG Time Series Plot')
+        plt.xlabel('Time (milliseconds)')
+        plt.ylabel('Amplitude (uV)')
+        plt.legend()
 
         if self.display:
-            plt.title('EEG Time Series Plot')
-            plt.xlabel('Time (milliseconds)')
-            plt.ylabel('Amplitude (uV)')
-            plt.legend()
             plt.show()
-
-        else: 
-            pass
-
 
     def plot_topomap(self, channel_map):
         if isinstance(self.data, np.ndarray):
