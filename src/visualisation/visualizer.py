@@ -3,19 +3,37 @@ import numpy as np
 import os
 import mne
 import matplotlib.pyplot as plt
+import random
 
 
 class DataVisualizer:
-    def __init__(self, data, chart_type="psd", sampling_rate=512, save_path=None, no_of_plots=4, display=True):
-        self.data = data
-        self.channels = data.columns[:]
+    def __init__(self, chart_type="psd", sampling_rate=512, save_path=None, no_of_plots=4, display=True):
         self.chart_type = chart_type
         self.save_path = save_path
         self.no_of_plots = no_of_plots
         self.sampling_rate = sampling_rate
         self.display = display
 
-    
+    def run_vis_pipeline(self, directory):
+        files = [os.path.join(dirpath, f)
+             for dirpath, dirnames, filenames in os.walk(directory)
+             for f in filenames if f.endswith('.csv')]    
+        
+        sample_files = random.sample(files, min(self.no_of_plots, len(files)))
+        print(f"Selected Files: {sample_files}")
+
+        for file in sample_files:
+            data = pd.read_csv(file)
+            self.data = data
+            self.channels = data.columns
+            self.plot()
+
+    def save_plot(self):
+        if self.save_path:
+            plt.savefig(self.save_path)
+        else:
+            pass
+
     def plot(self):
         if self.chart_type == "psd":
             self.plot_psd()
@@ -63,7 +81,7 @@ class DataVisualizer:
             pass
 
 
-    def psd_plot(self, channel_map):
+    def plot_topomap(self, channel_map):
         if isinstance(self.data, np.ndarray):
             data = pd.DataFrame(self.data)
 
