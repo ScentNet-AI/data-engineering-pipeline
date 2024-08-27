@@ -1,2 +1,20 @@
 /data/
 .env
+# Ignore data directory
+/data/
+
+# Ignore environment file
+.env
+
+# Ignore LightningAI files
+.lightning_studio/
+
+# Ignore Wakatime files
+.wakatime/
+
+.ipynb_checkpoints/
+
+.jupyter/
+
+# Ignore VSCode files
+.vscode/
